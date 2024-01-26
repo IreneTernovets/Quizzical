@@ -4,13 +4,17 @@ import Background from './components/Background';
 
 function App() {
   return (
-    <main>
-      <Background>
-      <h1>Quizzical</h1>
-      <p>Some description if needed</p>
+    
+    <Background>
+      <main>
+        <h1>Quizzical</h1>
+        <p className='quiz-desc'>In this quiz game, players respond to multiple-choice questions
+          by choosing the correct option from several answers. Points are awarded for each correct response,
+          aiming to test knowledge and quick thinking without a competitive winner.</p>
         <Link to="/quiz">Start quiz</Link>
-        </Background>
-    </main>
+      </main>
+    </Background>
+    
   )
 }
 
