@@ -9,6 +9,9 @@ font-family: 'Karla', sans-serif;*/
 }
 body {
   background-color: #F5F7FB;
+  color: #293264;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
 }
 
 .background-container {
@@ -44,5 +47,22 @@ main {
 
 .quiz-desc {
   max-width: 20%;
-  margin: 50px auto;
+  margin: 35px auto;
+  font-size: 16px;
+  text-align: justify;
+  font-weight: 400;
+  
+}
+main h1 {
+  font-size: 32px;
+  font-family: 'Karla', sans-serif;
+  font-weight: 700;
+}
+.start-button {
+  background-color: #4D5B9E;
+  padding: 16px 30px;
+  color: #F5F7FB;
+  text-decoration: none;
+  border-radius: 15px;
+  font-size: 17px;
 }
