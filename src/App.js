@@ -1,10 +1,12 @@
 import './App.css';
-import { Link } from "react-router-dom"; 
+import React from 'react';
+import { Link } from "react-router-dom";
 import Background from './components/Background';
 
 function App() {
+
   return (
-    
+
     <Background>
       <main>
         <h1>👾Quizzical</h1>
@@ -13,7 +15,7 @@ function App() {
         <Link to="/quiz" className="start-button">Start quiz</Link>
       </main>
     </Background>
-    
+
   )
 }
 

@@ -6,21 +6,27 @@ const Quiz = () => {
   const [questions, setQuestions] = React.useState([])
 
   React.useEffect(() => {
-    fetch('https://opentdb.com/api.php?amount=5&difficulty=medium&type=multiple')
-      .then(res => res.json())
-      .then(data => setQuestions(data.results))
-  }, [])
+    const fetchData = async () => {
+      const response = await fetch('https://opentdb.com/api.php?amount=5&difficulty=medium&type=multiple');
+      const data = await response.json();
+      setQuestions(data.results);
+    };
+    if (questions.length === 0) {
+      fetchData();
+    }
+  }, []);
 
 
- 
+  const QuestionElements = questions.map(question => (<QuestionElement />))
+
 
   return (
     <Background>
-      {questions && questions.map(item => (
-        <QuestionElement />
-      ))}
+      {QuestionElements}
     </Background>
-  )
-}
+  );
+};
+
+
 
 export default Quiz
