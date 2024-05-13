@@ -1,47 +1,66 @@
 import React from 'react'
 import Background from '../components/Background'
-import QuestionElement from '../components/QuestionElement'
 import { decode } from 'html-entities';
 import { nanoid } from 'nanoid'
+import Question from '../components/Question';
+
+/* decode is used for strings */
 
 const Quiz = () => {
-  const [questions, setQuestions] = React.useState([])
+  const [quizData, setQuizData] = React.useState(null);
+  const [userAnswers, setUserAnswers] = React.useState({})
 
   React.useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch('https://opentdb.com/api.php?amount=5&difficulty=medium&type=multiple');
-      const data = await response.json();
-      setQuestions(data.results);
-      console.log(data.results)
+
+    const fetchQuizData = async () => {
+      try {
+        const response = await fetch('https://opentdb.com/api.php?amount=5&difficulty=medium&type=multiple');
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        setQuizData(data.results);
+      } catch (error) {
+        console.error("Failed to fetch quiz data:", error);
+      }
     };
-    if (questions.length === 0) {
-      fetchData();
-    }
-  }, []);
 
-  function shuffleArray(array) {
-    let shuffledArray = array.slice();
+    fetchQuizData();
+  }, [])
 
-    for (let i = shuffledArray.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
-    }
 
-    return shuffledArray;
+
+  const questionElements = quizData ? quizData.map(question => (
+    <Question key={nanoid()}
+      id={nanoid()}
+      question={decode(question.question)}
+      correctAnswer={decode(question.correct_answer)}
+      incorrectAnswerArr={question.incorrect_answers}
+      onSelectAnswe={handleUserSelect}
+    />
+  )) : [];
+
+  function handleUserSelect(questionId, selectedAnswer) {
+    setUserAnswers(prevAnswers => ({
+      ...prevAnswers,
+      [questionId]: selectedAnswer
+    }))
   }
-
-  const QuestionElements = questions.map(question => (<QuestionElement
-    key={nanoid()}
-    question={decode(question.question)}
-    shuffledAnswers={shuffleArray([...question.incorrect_answers, question.correct_answer])}
-  />))
 
 
   return (
     <Background>
       <div className='quiz-body'>
-        {QuestionElements}
+        {quizData ? (
+          <ul>
+            {questionElements}
+          </ul>
+        ) : (
+          <p>Loading questions...</p>
+        )}
+        <button className='check-button'>Check answers</button>
       </div>
+
     </Background>
   );
 };

@@ -6,8 +6,8 @@ const Background = ({ children }) => {
   return (
     <div className="background-container">
       <img src={image1} alt="Background Image" className="image1-style" />
-          <img src={image2} alt="Background Image" className="image2-style" />
-          {children}
+      <img src={image2} alt="Background Image" className="image2-style" />
+      {children}
     </div>
   )
 }
