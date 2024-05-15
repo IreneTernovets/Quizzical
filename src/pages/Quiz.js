@@ -8,7 +8,8 @@ import Question from '../components/Question';
 
 const Quiz = () => {
   const [quizData, setQuizData] = React.useState(null);
-  const [userAnswers, setUserAnswers] = React.useState({})
+  const [userAnswers, setUserAnswers] = React.useState({
+  })
 
   React.useEffect(() => {
 
@@ -19,7 +20,22 @@ const Quiz = () => {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        setQuizData(data.results);
+        const preparedData = data.results.map(question => {
+
+          const randomIndex = Math.floor(Math.random() * (question.incorrect_answers.length + 1))
+          const mixedArray = [
+            ...question.incorrect_answers.slice(0, randomIndex),
+            question.correct_answer,
+            ...question.incorrect_answers.slice(randomIndex)
+          ];
+
+          return {
+            ...question,
+            mixedAnswers: mixedArray
+          }
+        })
+
+        setQuizData(preparedData);
       } catch (error) {
         console.error("Failed to fetch quiz data:", error);
       }
@@ -28,25 +44,25 @@ const Quiz = () => {
     fetchQuizData();
   }, [])
 
-
-
-  const questionElements = quizData ? quizData.map(question => (
-    <Question key={nanoid()}
-      id={nanoid()}
-      question={decode(question.question)}
-      correctAnswer={decode(question.correct_answer)}
-      incorrectAnswerArr={question.incorrect_answers}
-      onSelectAnswe={handleUserSelect}
-    />
-  )) : [];
-
-  function handleUserSelect(questionId, selectedAnswer) {
+  function handleSelect(id, answer) {
     setUserAnswers(prevAnswers => ({
       ...prevAnswers,
-      [questionId]: selectedAnswer
+      [id]: answer
     }))
   }
 
+  const questionElements = quizData ? quizData.map(question => {
+
+    return (
+      <Question key={nanoid()}
+        id={decode(question.question)}
+        question={decode(question.question)}
+        answers={question.mixedAnswers}
+        handleSelect={handleSelect}
+        selectedValue={userAnswers[decode(question.question)]}
+      />
+    )
+  }) : [];
 
   return (
     <Background>
