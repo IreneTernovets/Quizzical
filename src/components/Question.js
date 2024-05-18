@@ -1,14 +1,12 @@
 import React from 'react'
-import { decode } from 'html-entities';
 
 const Question = (props) => {
     const [answersArray, setAnswersArray] = React.useState(props.answers);
 
-    console.log(props.selectedValue)
-
     const answerRadios = answersArray.map((answer, index) => (
-        <div key={index}>
-            <input
+        <div className='question-radio-input' key={index}>
+            < input
+
                 type="radio"
                 id={answer}
                 name={"quizAnswer" + answer}
@@ -18,14 +16,14 @@ const Question = (props) => {
                     props.handleSelect(props.id, answer)
                 }}
             />
-            <label htmlFor={answer}>{decode(answer)}</label>
-        </div>))
-
+            < label htmlFor={answer} > {answer}</label >
+        </div >))
 
     return (
         <div className='question'>
-            <div>{props.question}</div>
-            <div>{answerRadios}</div>
+            <div className='question-question'>{props.question}</div>
+            <div className='question-answers-box'>{answerRadios}</div>
+            <hr />
         </div>
     )
 }

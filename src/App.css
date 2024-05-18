@@ -14,10 +14,31 @@ body {
   font-weight: 500;
 }
 
+hr {
+  color: #DBDEF0;
+  border: 1px solid #DBDEF0;
+}
+
+
+input[type="radio"] {
+  display: none;
+}
+
+
+label {
+  cursor: pointer; 
+  padding: 5px; 
+  margin-right: 10px; 
+}
+
+
 .background-container {
   position: relative; 
   width: 100%; 
   height: 100vh; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .image1-style, .image2-style {
@@ -60,6 +81,11 @@ main h1 {
   font-family: 'Karla', sans-serif;
   font-weight: 700;
 }
+
+.quiz-body {
+max-width: 70%;
+}
+
 .start-button {
   background-color: #4D5B9E;
   padding: 16px 30px;
@@ -71,4 +97,44 @@ main h1 {
 
 .question {
   z-index: 35;
+}
+
+.question-question {
+font-family: 'Karla', sans-serif;
+font-weight: 700;
+font-size: 20px;
+margin-top: 14px;
+}
+
+label {
+border: 1px solid #293264;
+border-radius: 10px;
+
+}
+
+.question-radio-input {
+margin: 11px 13px 14px 0;
+padding: 7px 5px;
+}
+
+input[type="radio"]:checked + label {
+  background-color: #D6DBF5;
+  border-color: #D6DBF5;
+}
+
+.question-answers-box {
+  display: flex;
+}
+
+.check-button {
+  font-family: 'Inter', sans-serif;
+  background-color: #4D5B9E;
+  color: #F5F7FB;
+  border: none;
+  font-size: 15px;
+  padding: 13px 23px;
+  border-radius: 10px;
+  margin: 20px auto;
+  display: flex;
+  cursor: pointer;
 }

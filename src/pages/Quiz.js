@@ -8,8 +8,9 @@ import Question from '../components/Question';
 
 const Quiz = () => {
   const [quizData, setQuizData] = React.useState(null);
-  const [userAnswers, setUserAnswers] = React.useState({
-  })
+  const [userAnswers, setUserAnswers] = React.useState({})
+  const [finishGame, setFinishGame] = React.useState(false)
+  const [count, setCount] = React.useState(0)
 
   React.useEffect(() => {
 
@@ -22,18 +23,25 @@ const Quiz = () => {
         const data = await response.json();
         const preparedData = data.results.map(question => {
 
-          const randomIndex = Math.floor(Math.random() * (question.incorrect_answers.length + 1))
+          const decodedQuestion = decode(question.question);
+          const decodedCorrectAnswer = decode(question.correct_answer);
+          const decodedIncorrectAnswers = question.incorrect_answers.map(answer => decode(answer));
+
+          const randomIndex = Math.floor(Math.random() * (decodedIncorrectAnswers.length + 1));
           const mixedArray = [
-            ...question.incorrect_answers.slice(0, randomIndex),
-            question.correct_answer,
-            ...question.incorrect_answers.slice(randomIndex)
+            ...decodedIncorrectAnswers.slice(0, randomIndex),
+            decodedCorrectAnswer,
+            ...decodedIncorrectAnswers.slice(randomIndex)
           ];
 
           return {
             ...question,
+            question: decodedQuestion,
+            correct_answer: decodedCorrectAnswer,
+            incorrect_answers: decodedIncorrectAnswers,
             mixedAnswers: mixedArray
           }
-        })
+        });
 
         setQuizData(preparedData);
       } catch (error) {
@@ -44,25 +52,42 @@ const Quiz = () => {
     fetchQuizData();
   }, [])
 
+
   function handleSelect(id, answer) {
+    const currentObject = quizData.find(object => object.question === id);
+    const isCorrect = currentObject.correct_answer === answer;
+
     setUserAnswers(prevAnswers => ({
       ...prevAnswers,
-      [id]: answer
-    }))
+      [id]: {
+        answer: answer,
+        indicator: isCorrect
+      }
+    }));
   }
 
   const questionElements = quizData ? quizData.map(question => {
-
+    const userResponse = userAnswers[question.question];
     return (
       <Question key={nanoid()}
-        id={decode(question.question)}
-        question={decode(question.question)}
+        id={question.question}
+        question={question.question}
         answers={question.mixedAnswers}
         handleSelect={handleSelect}
-        selectedValue={userAnswers[decode(question.question)]}
+        selectedValue={userResponse?.answer}
+        isCorrect={userResponse?.indicator}
       />
     )
   }) : [];
+
+  function checkAnswers() {
+    setFinishGame(true);
+    let answersArray = Object.values(userAnswers);
+    let trueCount = answersArray.filter(item => item.indicator).length;
+    setCount(trueCount)
+  }
+
+
 
   return (
     <Background>
@@ -74,7 +99,8 @@ const Quiz = () => {
         ) : (
           <p>Loading questions...</p>
         )}
-        <button className='check-button'>Check answers</button>
+        {finishGame && <span>You scored {count}/5 correct answers</span>}
+        <button className='check-button' onClick={checkAnswers}>Check answers</button>
       </div>
 
     </Background>
