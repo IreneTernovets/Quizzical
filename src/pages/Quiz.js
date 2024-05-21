@@ -71,11 +71,13 @@ const Quiz = () => {
     return (
       <Question key={nanoid()}
         id={question.question}
+        correctAnswer={question.correct_answer}
         question={question.question}
         answers={question.mixedAnswers}
         handleSelect={handleSelect}
         selectedValue={userResponse?.answer}
         isCorrect={userResponse?.indicator}
+        finishGame={finishGame}
       />
     )
   }) : [];
@@ -88,7 +90,6 @@ const Quiz = () => {
   }
 
 
-
   return (
     <Background>
       <div className='quiz-body'>
@@ -99,8 +100,11 @@ const Quiz = () => {
         ) : (
           <p>Loading questions...</p>
         )}
-        {finishGame && <span>You scored {count}/5 correct answers</span>}
-        <button className='check-button' onClick={checkAnswers}>Check answers</button>
+        <div className='footer'>
+          {finishGame && <div className='footer-score'>You scored {count}/5 correct answers</div>}
+          <button className='check-button' onClick={checkAnswers}>Check answers</button>
+        </div>
+
       </div>
 
     </Background>
